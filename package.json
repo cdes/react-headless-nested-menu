@@ -1,6 +1,6 @@
 {
   "name": "remenu",
-  "version": "0.0.0",
+  "version": "0.0.0-development",
   "description": "",
   "keywords": [],
   "main": "dist/remenu.umd.js",
