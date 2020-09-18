@@ -10,6 +10,8 @@ A useful hook that gives you all the functions you need to create a multi-level 
 - Created in TypeScript, so you get types out of the box.
 - Fully configurable behavior (open on click or hover).
 
+![React Headless Nested Menu Logo](./images/preview.png)
+
 ### Installation
 
 ```bash
@@ -128,6 +130,8 @@ React.render(<App />, rootElement);
 ## To do
 
 - Improve documentation.
+- Add more example.
+- Add tests.
 - Use popper for positioning menus.
 
 ## Examples
