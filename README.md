@@ -1,3 +1,5 @@
+![React Headless Nested Menu Logo](./images/logo.png)
+
 # React Headless Nested Menu
 
 A useful hook that gives you all the functions you need to create a multi-level menu using your own components!
