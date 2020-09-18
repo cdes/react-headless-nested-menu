@@ -1,14 +1,5 @@
-import DummyClass from '../src/react-headless-nested-menu'
-
-/**
- * Dummy test
- */
 describe('Dummy test', () => {
-  it('works if true is truthy', () => {
+  it('Works', () => {
     expect(true).toBeTruthy()
-  })
-
-  it('DummyClass is instantiable', () => {
-    expect(new DummyClass()).toBeInstanceOf(DummyClass)
   })
 })
