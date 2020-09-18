@@ -1,8 +1,8 @@
-![React Headless Nested Menu Logo](./images/logo.png)
+![React Headless Nested Menu Logo](https://github.com/cdes/react-headless-nested-menu/raw/master/images/logo.png)
 
 # React Headless Nested Menu
 
-A useful hook that gives you all the functions you need to create a multi-level menu using your own components!
+A useful headless component (hook) that gives you all the functions you need to create a multi-level menu using your own components!
 
 ### Features
 
@@ -10,7 +10,7 @@ A useful hook that gives you all the functions you need to create a multi-level 
 - Created in TypeScript, so you get types out of the box.
 - Fully configurable behavior (open on click or hover).
 
-![React Headless Nested Menu Logo](./images/preview.png)
+![React Headless Nested Menu Logo](https://github.com/cdes/react-headless-nested-menu/raw/master/images/preview.png)
 
 ### Installation
 
