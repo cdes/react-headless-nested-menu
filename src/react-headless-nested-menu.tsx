@@ -1,11 +1,6 @@
-// Import here Polyfills if needed. Recommended core-js (npm i -D core-js)
-// ...
-
 import React from 'react'
 import produce, { Draft } from 'immer'
 import getEventPath, { handleRefs, getDirection } from './utils'
-
-const { useRef, useReducer, useEffect, useCallback } = React
 
 interface MenuItem {
   id: string
@@ -15,15 +10,24 @@ interface MenuItem {
 
 export type Items = MenuItem[]
 
+/**
+ * @ignore
+ */
 interface ToggleAction {
   type: 'toggle'
 }
 
+/**
+ * @ignore
+ */
 interface OpenPathAction {
   type: 'open-path'
   id: string
 }
 
+/**
+ * @ignore
+ */
 interface ClosePathAction {
   type: 'close-path'
   id: string
@@ -31,12 +35,18 @@ interface ClosePathAction {
 
 type Action = ToggleAction | OpenPathAction | ClosePathAction
 
+/**
+ * @ignore
+ */
 interface NestedMenuState {
   items: Items
   isOpen: boolean
   currentPath: string[]
 }
 
+/**
+ * @ignore
+ */
 const reducer = produce((draft: Draft<NestedMenuState>, action: Action) => {
   switch (action.type) {
     case 'toggle':
@@ -56,29 +66,38 @@ const reducer = produce((draft: Draft<NestedMenuState>, action: Action) => {
   }
 })
 
+/**
+ * The props you pass to `useNestedMenu(props) as args`
+ *
+ * @category Types
+ */
 interface NestedMenuProps {
   items?: Items
   isOpen?: boolean
   defaultOpenPath?: string[]
 }
 
-interface HitAreaProps {
-  anchor?: DOMRect
-  menu?: DOMRect
-}
+// interface HitAreaProps {
+//   anchor?: DOMRect
+//   menu?: DOMRect
+// }
 
+/**
+ *
+ * @category Hooks
+ */
 export const useNestedMenu = ({
   items = [],
   isOpen = false,
   defaultOpenPath = [],
 }: NestedMenuProps) => {
-  const [state, dispatch] = useReducer(reducer, {
+  const [state, dispatch] = React.useReducer(reducer, {
     items,
     isOpen,
     currentPath: defaultOpenPath,
   })
 
-  const globalClickHandler = useCallback(
+  const globalClickHandler = React.useCallback(
     (event: MouseEvent) => {
       const path = getEventPath(event)
       const items = Object.keys(itemRefs.current).map((id) => itemRefs.current[id]) as EventTarget[]
@@ -96,7 +115,7 @@ export const useNestedMenu = ({
     [state.isOpen]
   )
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (state.isOpen) {
       document.addEventListener('click', globalClickHandler)
     }
@@ -131,7 +150,7 @@ export const useNestedMenu = ({
 
   const isSubMenuOpen = (item: MenuItem) => state.currentPath.indexOf(item.id) !== -1
 
-  const toggleButtonRef = useRef(null!)
+  const toggleButtonRef = React.useRef(null!)
 
   const getToggleButtonProps = () => ({
     onClick() {
@@ -140,7 +159,7 @@ export const useNestedMenu = ({
     ref: toggleButtonRef,
   })
 
-  const menuRefs = useRef<{ [key: string]: HTMLElement }>({})
+  const menuRefs = React.useRef<{ [key: string]: HTMLElement }>({})
 
   const getMenuProps = (item?: MenuItem) => ({
     key: item?.id || 'root',
@@ -151,7 +170,7 @@ export const useNestedMenu = ({
     }),
   })
 
-  const itemRefs = useRef<{ [key: string]: HTMLElement }>({})
+  const itemRefs = React.useRef<{ [key: string]: HTMLElement }>({})
 
   const getItemProps = (item: MenuItem) => ({
     key: item.id,
@@ -224,8 +243,8 @@ export const useNestedMenu = ({
   const getItemPath = (item: MenuItem) => [...state.currentPath, item.id]
 
   // still not working properly
-  const anchorRef = useRef<HTMLElement>()
-  const menuRef = useRef<HTMLElement>()
+  const anchorRef = React.useRef<HTMLElement>()
+  const menuRef = React.useRef<HTMLElement>()
 
   return {
     getToggleButtonProps,
@@ -236,7 +255,6 @@ export const useNestedMenu = ({
     getCloseTriggerProps,
     getToggleTriggerProps,
     getItemPath,
-    items: state.items,
     isOpen: state.isOpen,
     currentPath: state.currentPath,
     openPath,

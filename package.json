@@ -1,8 +1,17 @@
 {
   "name": "react-headless-nested-menu",
-  "version": "0.0.0-development",
-  "description": "",
-  "keywords": [],
+  "version": "0.5.0",
+  "description": "A useful headless component (hook) that gives you all the functions you need to create a multi-level menu using your own components!",
+  "keywords": [
+    "menu",
+    "nested menu",
+    "multi-level menu",
+    "multilevel menu",
+    "mega menu",
+    "headless ui",
+    "headless component",
+    "hook"
+  ],
   "main": "dist/react-headless-nested-menu.umd.js",
   "module": "dist/react-headless-nested-menu.es5.js",
   "typings": "dist/types/react-headless-nested-menu.d.ts",
@@ -21,7 +30,7 @@
   "scripts": {
     "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
     "prebuild": "rimraf dist",
-    "build": "tsc --module commonjs && rollup -c rollup.config.ts && typedoc --out docs --target es6 --theme minimal --mode file src",
+    "build": "tsc --module commonjs && rollup -c rollup.config.ts && typedoc --out docs --target es6 --theme minimal --mode file src --exclude 'src/utils.ts'",
     "start": "rollup -c rollup.config.ts -w",
     "test": "jest --coverage",
     "test:watch": "jest --coverage --watch",

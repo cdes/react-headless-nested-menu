@@ -127,6 +127,7 @@ React.render(<App />, rootElement);
 
 ## To do
 
+- Improve documentation.
 - Use popper for positioning menus.
 
 ## Examples
