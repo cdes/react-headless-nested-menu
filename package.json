@@ -21,7 +21,8 @@
   "author": "Ahmad Al Haddad <haddad@ah.sa>",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/cdes/react-headless-nested-menu/",
+    "ssh": "git@github.com:cdes/react-headless-nested-menu.git"
   },
   "license": "MIT",
   "engines": {
