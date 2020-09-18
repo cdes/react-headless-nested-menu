@@ -1,11 +1,11 @@
 {
-  "name": "remenu",
+  "name": "react-headless-nested-menu",
   "version": "0.0.0-development",
   "description": "",
   "keywords": [],
-  "main": "dist/remenu.umd.js",
-  "module": "dist/remenu.es5.js",
-  "typings": "dist/types/remenu.d.ts",
+  "main": "dist/react-headless-nested-menu.umd.js",
+  "module": "dist/react-headless-nested-menu.es5.js",
+  "typings": "dist/types/react-headless-nested-menu.d.ts",
   "files": [
     "dist"
   ],

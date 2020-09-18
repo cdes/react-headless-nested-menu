@@ -1,4 +1,4 @@
-import DummyClass from '../src/remenu'
+import DummyClass from '../src/react-headless-nested-menu'
 
 /**
  * Dummy test

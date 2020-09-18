@@ -7,7 +7,7 @@ import json from 'rollup-plugin-json'
 
 const pkg = require('./package.json')
 
-const libraryName = 'remenu'
+const libraryName = 'react-headless-nested-menu'
 
 export default {
   input: `src/${libraryName}.tsx`,
