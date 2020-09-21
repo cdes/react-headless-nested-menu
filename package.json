@@ -79,7 +79,7 @@
       }
     },
     "collectCoverageFrom": [
-      "src/*.{js,ts}x?"
+      "src/*.{js,ts,tsx}"
     ]
   },
   "prettier": {
