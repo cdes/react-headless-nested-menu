@@ -59,7 +59,7 @@
     "transform": {
       ".(ts|tsx)": "ts-jest"
     },
-    "testEnvironment": "node",
+    "testEnvironment": "jsdom",
     "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
     "moduleFileExtensions": [
       "ts",
@@ -79,7 +79,7 @@
       }
     },
     "collectCoverageFrom": [
-      "src/*.{js,ts}"
+      "src/*.{js,ts}x?"
     ]
   },
   "prettier": {
@@ -94,6 +94,7 @@
   "devDependencies": {
     "@commitlint/cli": "^11.0.0",
     "@commitlint/config-conventional": "^11.0.0",
+    "@testing-library/react": "^11.0.4",
     "@types/jest": "^26.0.13",
     "@types/node": "^14.10.2",
     "@types/react": "^16.9.49",
@@ -109,6 +110,7 @@
     "lodash.camelcase": "^4.3.0",
     "prettier": "^2.1.1",
     "prompt": "^1.0.0",
+    "react-dom": "^16.13.1",
     "replace-in-file": "^6.1.0",
     "rimraf": "^3.0.2",
     "rollup": "^2.26.11",
