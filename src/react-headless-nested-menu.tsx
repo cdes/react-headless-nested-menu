@@ -66,6 +66,7 @@ const reducer = produce((draft: Draft<NestedMenuState>, action: Action) => {
     case 'close-path':
       const index = draft.currentPath.indexOf(action.item.id)
       draft.currentPath.splice(index)
+      draft.currentPathItems.splice(index)
       break
     default:
       break
