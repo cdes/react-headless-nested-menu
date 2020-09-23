@@ -22,7 +22,7 @@ interface ToggleAction {
  */
 interface OpenPathAction {
   type: 'open-path'
-  id: string
+  item: MenuItem
 }
 
 /**
@@ -30,7 +30,7 @@ interface OpenPathAction {
  */
 interface ClosePathAction {
   type: 'close-path'
-  id: string
+  item: MenuItem
 }
 
 type Action = ToggleAction | OpenPathAction | ClosePathAction
@@ -44,6 +44,7 @@ interface NestedMenuState {
   items: Items
   isOpen: boolean
   currentPath: string[]
+  currentPathItems: MenuItem[]
   placement: Placement
 }
 
@@ -55,13 +56,15 @@ const reducer = produce((draft: Draft<NestedMenuState>, action: Action) => {
     case 'toggle':
       draft.isOpen = !draft.isOpen
       draft.currentPath = []
+      draft.currentPathItems = []
       break
 
     case 'open-path':
-      draft.currentPath.push(action.id)
+      draft.currentPath.push(action.item.id)
+      draft.currentPathItems.push(action.item)
       break
     case 'close-path':
-      const index = draft.currentPath.indexOf(action.id)
+      const index = draft.currentPath.indexOf(action.item.id)
       draft.currentPath.splice(index)
       break
     default:
@@ -100,6 +103,7 @@ export const useNestedMenu = ({
     items,
     isOpen,
     currentPath: defaultOpenPath,
+    currentPathItems: [],
     placement,
   })
 
@@ -140,7 +144,7 @@ export const useNestedMenu = ({
     if (item.subMenu) {
       dispatch({
         type: 'open-path',
-        id: item.id,
+        item,
       })
     }
   }
@@ -149,7 +153,7 @@ export const useNestedMenu = ({
     if (item.subMenu) {
       dispatch({
         type: 'close-path',
-        id: item.id,
+        item,
       })
     }
   }
@@ -283,6 +287,7 @@ export const useNestedMenu = ({
   })
 
   const getItemPath = (item: MenuItem) => [...state.currentPath, item.id]
+  const getItemPathAsItems = (item: MenuItem) => [...state.currentPathItems, item]
 
   // still not working properly
   const anchorRef = React.useRef<HTMLElement>()
@@ -297,6 +302,7 @@ export const useNestedMenu = ({
     getCloseTriggerProps,
     getToggleTriggerProps,
     getItemPath,
+    getItemPathAsItems,
     isOpen: state.isOpen,
     currentPath: state.currentPath,
     openPath,
