@@ -35,6 +35,8 @@ interface ClosePathAction {
 
 type Action = ToggleAction | OpenPathAction | ClosePathAction
 
+type Placement = 'top' | 'bottom' | 'start' | 'end'
+
 /**
  * @ignore
  */
@@ -42,6 +44,7 @@ interface NestedMenuState {
   items: Items
   isOpen: boolean
   currentPath: string[]
+  placement: Placement
 }
 
 /**
@@ -75,6 +78,7 @@ interface NestedMenuProps {
   items?: Items
   isOpen?: boolean
   defaultOpenPath?: string[]
+  placement?: Placement
 }
 
 // interface HitAreaProps {
@@ -90,11 +94,13 @@ export const useNestedMenu = ({
   items = [],
   isOpen = false,
   defaultOpenPath = [],
+  placement = 'end',
 }: NestedMenuProps) => {
   const [state, dispatch] = React.useReducer(reducer, {
     items,
     isOpen,
     currentPath: defaultOpenPath,
+    placement,
   })
 
   const globalClickHandler = React.useCallback(
@@ -183,25 +189,61 @@ export const useNestedMenu = ({
 
   const getMenuOffsetStyles = (currentItem?: MenuItem) => {
     const item = currentItem ? itemRefs.current[currentItem.id] : null
-    const level =
-      state.currentPath.length === 0
-        ? 0 // root menu
-        : currentItem && state.currentPath.includes(currentItem.id)
-        ? 1 // submenu, indent
-        : 0
     const button = toggleButtonRef.current as HTMLElement
 
     const dir = getDirection()
-    const direction = dir === 'ltr' ? 'left' : 'right'
-    const rootX =
+    const rootXEnd =
       dir === 'ltr'
         ? button.getBoundingClientRect().right
         : window.innerWidth - button.getBoundingClientRect().left
 
+    let vertical: string = 'top'
+    let horizontal: string = dir === 'ltr' ? 'left' : 'right'
+    let verticalValue = item ? 0 : button.getBoundingClientRect().top
+    let horizontalValue = item ? item.getBoundingClientRect().width : rootXEnd
+
+    if (dir === 'ltr') {
+      if (placement === 'top') {
+        vertical = item ? 'top' : 'bottom'
+        verticalValue = item ? 0 : window.innerHeight - button.getBoundingClientRect().top
+        horizontalValue = item
+          ? item.getBoundingClientRect().width
+          : button.getBoundingClientRect().left
+      } else if (placement === 'bottom') {
+        verticalValue = item ? 0 : button.getBoundingClientRect().bottom
+        horizontalValue = item
+          ? item.getBoundingClientRect().width
+          : button.getBoundingClientRect().left
+      } else if (placement === 'start') {
+        horizontal = item ? 'left' : 'right'
+        horizontalValue = item
+          ? item.getBoundingClientRect().width
+          : window.innerWidth - button.getBoundingClientRect().left
+      }
+    } else {
+      if (placement === 'top') {
+        vertical = item ? 'top' : 'bottom'
+        horizontal = 'right'
+        verticalValue = item ? 0 : window.innerHeight - button.getBoundingClientRect().top
+        horizontalValue = item
+          ? item.getBoundingClientRect().width
+          : window.innerWidth - button.getBoundingClientRect().right
+      } else if (placement === 'bottom') {
+        verticalValue = item ? 0 : button.getBoundingClientRect().bottom
+        horizontalValue = item
+          ? item.getBoundingClientRect().width
+          : window.innerWidth - button.getBoundingClientRect().right
+      } else if (placement === 'start') {
+        horizontal = item ? 'right' : 'left'
+        horizontalValue = item
+          ? item.getBoundingClientRect().width
+          : button.getBoundingClientRect().right
+      }
+    }
+
     return {
-      top: item ? 0 : button.getBoundingClientRect().top,
-      [direction]: item ? button.getBoundingClientRect().width * level : rootX,
-      width: button.getBoundingClientRect().width,
+      [vertical]: verticalValue,
+      [horizontal]: horizontalValue,
     }
   }
 
