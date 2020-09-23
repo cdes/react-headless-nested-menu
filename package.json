@@ -1,6 +1,6 @@
 {
   "name": "react-headless-nested-menu",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "A useful headless component (hook) that gives you all the functions you need to create a multi-level menu using your own components!",
   "keywords": [
     "menu",
