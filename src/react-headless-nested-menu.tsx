@@ -2,7 +2,7 @@ import React from 'react'
 import produce, { Draft } from 'immer'
 import getEventPath, { handleRefs, getDirection } from './utils'
 
-interface MenuItem {
+export interface MenuItem {
   id: string
   label: string
   subMenu?: Items
