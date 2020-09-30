@@ -15,7 +15,7 @@ const simpleList = [
     id: 'ckeri9fsh00023g65zjdr0wdx',
     label: 'Email',
   },
-];
+]
 
 const Basic: React.FC = () => {
   const {
@@ -27,7 +27,7 @@ const Basic: React.FC = () => {
     getOpenTriggerProps,
     toggleMenu,
     isSubMenuOpen,
-    isOpen
+    isOpen,
   } = useNestedMenu({
     items: simpleList,
   })
@@ -41,9 +41,7 @@ const Basic: React.FC = () => {
         toggleMenu()
       }}
     >
-      <div
-        className={isSubMenuOpen(item) ? 'sub-open': 'sub-closed'}
-      >
+      <div className={isSubMenuOpen(item) ? 'sub-open' : 'sub-closed'}>
         {item.label}
         {item.subMenu && <span className="chevron" />}
       </div>
@@ -55,10 +53,6 @@ const Basic: React.FC = () => {
   const renderMenu = (items: Items, parentItem?: Items[0]) => (
     <div
       {...getMenuProps(parentItem)}
-      style={{
-        position: 'absolute',
-        ...getMenuOffsetStyles(parentItem),
-      }}
       className={typeof parentItem === 'undefined' ? 'root' : 'sub'}
       {...getCloseTriggerProps('onPointerLeave', parentItem)}
     >
@@ -91,15 +85,15 @@ const Basic: React.FC = () => {
 
 describe('Hook', () => {
   it('renders basic menu', () => {
-    const { container, queryByText } = render(<Basic />);
-    const btn = queryByText('Toggle');
-    expect(btn).toBeDefined();
-    expect(queryByText('Name')).toBe(null);
-    expect(queryByText('Photo')).toBe(null);
-    expect(queryByText('Email')).toBe(null);
-    fireEvent.click(btn!);
-    expect(queryByText('Name')).toBeDefined();
-    expect(queryByText('Photo')).toBeDefined();
-    expect(queryByText('Email')).toBeDefined();
+    const { container, queryByText } = render(<Basic />)
+    const btn = queryByText('Toggle')
+    expect(btn).toBeDefined()
+    expect(queryByText('Name')).toBe(null)
+    expect(queryByText('Photo')).toBe(null)
+    expect(queryByText('Email')).toBe(null)
+    fireEvent.click(btn!)
+    expect(queryByText('Name')).toBeDefined()
+    expect(queryByText('Photo')).toBeDefined()
+    expect(queryByText('Email')).toBeDefined()
   })
 })

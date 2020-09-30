@@ -1,7 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import produce, { Draft } from 'immer'
-import getEventPath, { handleRefs, getDirection } from './utils'
+import { usePopper } from 'react-popper'
+import { Placement } from '@popperjs/core'
+import { Options } from '@popperjs/core/lib/modifiers/offset'
 
+import getEventPath, { handleRefs, getDirection } from './utils'
 export interface MenuItem {
   id: string
   label: string
@@ -35,8 +38,6 @@ interface ClosePathAction {
 
 type Action = ToggleAction | OpenPathAction | ClosePathAction
 
-type Placement = 'top' | 'bottom' | 'start' | 'end'
-
 /**
  * @ignore
  */
@@ -45,7 +46,7 @@ interface NestedMenuState {
   isOpen: boolean
   currentPath: string[]
   currentPathItems: MenuItem[]
-  placement: Placement
+  placement?: Placement
 }
 
 /**
@@ -83,6 +84,7 @@ interface NestedMenuProps {
   isOpen?: boolean
   defaultOpenPath?: string[]
   placement?: Placement
+  offset?: Options['offset']
 }
 
 // interface HitAreaProps {
@@ -98,7 +100,8 @@ export const useNestedMenu = ({
   items = [],
   isOpen = false,
   defaultOpenPath = [],
-  placement = 'end',
+  placement,
+  offset,
 }: NestedMenuProps) => {
   const [state, dispatch] = React.useReducer(reducer, {
     items,
@@ -171,15 +174,30 @@ export const useNestedMenu = ({
   })
 
   const menuRefs = React.useRef<{ [key: string]: HTMLElement }>({})
+  const [popperElement, setPopperElement] = useState<HTMLElement | null>(null)
 
-  const getMenuProps = (item?: MenuItem) => ({
-    key: item?.id || 'root',
-    ref: handleRefs((itemNode) => {
-      if (itemNode) {
-        menuRefs.current[item?.id || 'root'] = itemNode
+  const getMenuProps = (item?: MenuItem) => {
+    if (item) {
+      return {
+        key: item.id,
+        ref: handleRefs((itemNode) => {
+          if (itemNode) {
+            menuRefs.current[item.id] = itemNode
+          }
+        }),
+        style: getMenuOffsetStyles(item),
       }
-    }),
-  })
+    } else {
+      return {
+        key: 'root',
+        ref: handleRefs((itemNode) => {
+          setPopperElement(itemNode)
+        }),
+        style: styles.popper,
+        ...attributes.popper,
+      }
+    }
+  }
 
   const itemRefs = React.useRef<{ [key: string]: HTMLElement }>({})
 
@@ -192,63 +210,16 @@ export const useNestedMenu = ({
     }),
   })
 
-  const getMenuOffsetStyles = (currentItem?: MenuItem) => {
-    const item = currentItem ? itemRefs.current[currentItem.id] : null
-    const button = toggleButtonRef.current as HTMLElement
+  const getMenuOffsetStyles = (currentItem?: MenuItem): React.CSSProperties => {
+    if (!currentItem) return {}
+    const item = itemRefs.current[currentItem.id]
 
     const dir = getDirection()
-    const rootXEnd =
-      dir === 'ltr'
-        ? button.getBoundingClientRect().right
-        : window.innerWidth - button.getBoundingClientRect().left
-
-    let vertical: string = 'top'
-    let horizontal: string = dir === 'ltr' ? 'left' : 'right'
-    let verticalValue = item ? 0 : button.getBoundingClientRect().top
-    let horizontalValue = item ? item.getBoundingClientRect().width : rootXEnd
-
-    if (dir === 'ltr') {
-      if (placement === 'top') {
-        vertical = item ? 'top' : 'bottom'
-        verticalValue = item ? 0 : window.innerHeight - button.getBoundingClientRect().top
-        horizontalValue = item
-          ? item.getBoundingClientRect().width
-          : button.getBoundingClientRect().left
-      } else if (placement === 'bottom') {
-        verticalValue = item ? 0 : button.getBoundingClientRect().bottom
-        horizontalValue = item
-          ? item.getBoundingClientRect().width
-          : button.getBoundingClientRect().left
-      } else if (placement === 'start') {
-        horizontal = item ? 'left' : 'right'
-        horizontalValue = item
-          ? item.getBoundingClientRect().width
-          : window.innerWidth - button.getBoundingClientRect().left
-      }
-    } else {
-      if (placement === 'top') {
-        vertical = item ? 'top' : 'bottom'
-        horizontal = 'right'
-        verticalValue = item ? 0 : window.innerHeight - button.getBoundingClientRect().top
-        horizontalValue = item
-          ? item.getBoundingClientRect().width
-          : window.innerWidth - button.getBoundingClientRect().right
-      } else if (placement === 'bottom') {
-        verticalValue = item ? 0 : button.getBoundingClientRect().bottom
-        horizontalValue = item
-          ? item.getBoundingClientRect().width
-          : window.innerWidth - button.getBoundingClientRect().right
-      } else if (placement === 'start') {
-        horizontal = item ? 'right' : 'left'
-        horizontalValue = item
-          ? item.getBoundingClientRect().width
-          : button.getBoundingClientRect().right
-      }
-    }
 
     return {
-      [vertical]: verticalValue,
-      [horizontal]: horizontalValue,
+      position: 'absolute',
+      top: 0,
+      [dir === 'ltr' ? 'left' : 'right']: item.clientWidth,
     }
   }
 
@@ -293,6 +264,22 @@ export const useNestedMenu = ({
   // still not working properly
   const anchorRef = React.useRef<HTMLElement>()
   const menuRef = React.useRef<HTMLElement>()
+
+  const { styles, attributes } = usePopper(toggleButtonRef.current, popperElement, {
+    placement: 'right-start',
+    modifiers: [
+      {
+        name: 'offset',
+        options: {
+          offset: offset,
+        },
+      },
+      {
+        name: 'flip',
+        enabled: false,
+      },
+    ],
+  })
 
   return {
     getToggleButtonProps,
