@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import produce, { Draft } from 'immer'
 import { usePopper } from 'react-popper'
-import { Placement } from '@popperjs/core'
-import { Options } from '@popperjs/core/lib/modifiers/offset'
+import { Placement, PositioningStrategy } from '@popperjs/core'
+import { Options as OffetOptions } from '@popperjs/core/lib/modifiers/offset'
 
 import getEventPath, { handleRefs, getDirection } from './utils'
 export interface MenuItem {
@@ -46,7 +46,6 @@ interface NestedMenuState {
   isOpen: boolean
   currentPath: string[]
   currentPathItems: MenuItem[]
-  placement?: Placement
 }
 
 /**
@@ -84,7 +83,8 @@ interface NestedMenuProps {
   isOpen?: boolean
   defaultOpenPath?: string[]
   placement?: Placement
-  offset?: Options['offset']
+  offset?: OffetOptions['offset']
+  strategy?: PositioningStrategy
 }
 
 // interface HitAreaProps {
@@ -102,13 +102,13 @@ export const useNestedMenu = ({
   defaultOpenPath = [],
   placement,
   offset,
+  strategy,
 }: NestedMenuProps) => {
   const [state, dispatch] = React.useReducer(reducer, {
     items,
     isOpen,
     currentPath: defaultOpenPath,
     currentPathItems: [],
-    placement,
   })
 
   const globalClickHandler = React.useCallback(
@@ -266,7 +266,8 @@ export const useNestedMenu = ({
   const menuRef = React.useRef<HTMLElement>()
 
   const { styles, attributes } = usePopper(toggleButtonRef.current, popperElement, {
-    placement: 'right-start',
+    placement: placement,
+    strategy: strategy,
     modifiers: [
       {
         name: 'offset',
