@@ -133,6 +133,9 @@ export const useNestedMenu = ({
     if (state.isOpen) {
       document.addEventListener('click', globalClickHandler)
     }
+    return () => {
+      document.removeEventListener('click', globalClickHandler)
+    }
   }, [state.isOpen, globalClickHandler])
 
   const toggleMenu = () => {
